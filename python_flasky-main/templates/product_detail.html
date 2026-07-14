@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} - Mobile Store AI{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row g-5 align-items-start">
+            <div class="col-lg-6">
+                <div class="detail-image-panel">
+                    <img src="{{ product.image_url }}" alt="{{ product.name }}">
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="product-brand">{{ product.brand }}</div>
+                <h1 class="detail-title">{{ product.name }}</h1>
+                <p class="detail-desc">{{ product.description }}</p>
+
+                <div class="price-block my-4">
+                    <div class="product-price fs-3">{{ "{:,.0f}".format(product.price) }}đ</div>
+                    {% if product.old_price %}
+                    <div class="old-price">{{ "{:,.0f}".format(product.old_price) }}đ</div>
+                    {% endif %}
+                </div>
+
+                <div class="info-grid">
+                    <div>
+                        <span>Danh mục</span>
+                        <strong>{{ product.category.name }}</strong>
+                    </div>
+                    <div>
+                        <span>Tồn kho</span>
+                        <strong>{{ product.stock }}</strong>
+                    </div>
+                    <div>
+                        <span>Thanh toán</span>
+                        <strong>COD</strong>
+                    </div>
+                    <div>
+                        <span>Dịch vụ</span>
+                        <strong>Tư vấn chọn máy</strong>
+                    </div>
+                </div>
+
+                <div class="spec-box mt-4">
+                    <h5>Thông số nổi bật</h5>
+                    <p>{{ product.specs }}</p>
+                </div>
+
+                <div class="d-flex flex-wrap gap-3 mt-4">
+                    <a href="/cart/add/{{ product.id }}" class="btn btn-primary btn-lg rounded-pill px-4">
+                        Thêm vào giỏ
+                    </a>
+                    <a href="/products" class="btn btn-outline-light btn-lg rounded-pill px-4">
+                        Quay lại
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {% if related_products %}
+        <div class="section-heading mt-5">
+            <p class="section-kicker">Related</p>
+            <h2>Sản phẩm liên quan</h2>
+        </div>
+
+        <div class="row g-4 mt-2">
+            {% for item in related_products %}
+            <div class="col-md-4">
+                <div class="product-card h-100">
+                    <div class="product-image-wrap">
+                        <img src="{{ item.image_url }}" alt="{{ item.name }}">
+                    </div>
+                    <div class="p-4">
+                        <div class="product-brand">{{ item.brand }}</div>
+                        <h5 class="product-title">{{ item.name }}</h5>
+                        <div class="product-price">{{ "{:,.0f}".format(item.price) }}đ</div>
+                        <a href="/products/{{ item.id }}" class="btn btn-sm btn-outline-light rounded-pill mt-3">
+                            Xem chi tiết
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

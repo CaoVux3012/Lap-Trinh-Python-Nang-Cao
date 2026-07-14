@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Sản phẩm - Mobile Store {% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <p class="section-kicker">Catalog</p>
+        <h1>Danh sách điện thoại</h1>
+        <p class="text-secondary mb-0">
+            Tìm kiếm, lọc sản phẩm và chọn điện thoại phù hợp với nhu cầu của bạn.
+        </p>
+    </div>
+</section>
+
+<section class="py-4">
+    <div class="container">
+        <form class="filter-bar mb-4" method="get" action="/products">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <input type="text" class="form-control" name="keyword" placeholder="Tìm theo tên sản phẩm..."
+                        value="{{ keyword }}">
+                </div>
+
+                <div class="col-md-3">
+                    <select class="form-select" name="brand">
+                        <option value="">Tất cả thương hiệu</option>
+                        {% for brand in brands %}
+                        <option value="{{ brand }}" {% if selected_brand==brand %}selected{% endif %}>
+                            {{ brand }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <select class="form-select" name="category_id">
+                        <option value="">Tất cả danh mục</option>
+                        {% for category in categories %}
+                        <option value="{{ category.id }}" {% if selected_category_id==category.id|string %}selected{%
+                            endif %}>
+                            {{ category.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-2 d-grid">
+                    <button class="btn btn-primary" type="submit">Lọc</button>
+                </div>
+            </div>
+        </form>
+
+        <div class="row g-4">
+            {% for product in products %}
+            <div class="col-md-6 col-lg-4">
+                <div class="product-card h-100">
+                    <div class="product-image-wrap">
+                        <img src="{{ product.image_url }}" alt="{{ product.name }}">
+                    </div>
+
+                    <div class="p-4">
+                        <div class="product-brand">{{ product.brand }}</div>
+                        <div class="d-flex gap-2 mb-2">
+                            <span class="product-badge">Chính hãng</span>
+                            <span class="product-badge muted">Bảo hành 12 tháng</span>
+                        </div>
+
+                        <h5 class="product-title">{{ product.name }}</h5>
+                        <p class="product-desc">{{ product.short_description }}</p>
+
+                        <div class="spec-line">
+                            Còn hàng: <strong>{{ product.stock }}</strong>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div>
+                                <div class="product-price">{{ "{:,.0f}".format(product.price) }}đ</div>
+                                {% if product.old_price %}
+                                <div class="old-price">{{ "{:,.0f}".format(product.old_price) }}đ</div>
+                                {% endif %}
+                            </div>
+                            <a href="/products/{{ product.id }}" class="btn btn-sm btn-outline-light rounded-pill">
+                                Xem chi tiết
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                Không tìm thấy sản phẩm phù hợp.
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Đăng ký tài khoản - Mobile Store{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="container">
+        <div class="auth-card" style="max-width: 450px; margin: 0 auto; background: #111827; padding: 30px; border-radius: 12px; border: 1px solid #1f2937;">
+            <p class="section-kicker">User Access</p>
+            <h1>Đăng ký tài khoản</h1>
+            <p class="text-secondary">
+                Tạo tài khoản để trải nghiệm mua sắm và nhận tư vấn tốt nhất.
+            </p>
+
+            <form method="post" action="/register" class="mt-4">
+                <!-- Họ & Tên -->
+                <div class="mb-3">
+                    <label class="form-label text-light">Họ & Tên *</label>
+                    <input type="text" name="full_name" class="form-control" placeholder="Nguyễn Văn A" required>
+                </div>
+
+                <!-- Gmail -->
+                <div class="mb-3">
+                    <label class="form-label text-light">Gmail (Tên tài khoản) *</label>
+                    <input type="email" name="username" class="form-control" placeholder="example@gmail.com" required>
+                    <div class="form-text text-secondary">Hệ thống sẽ dùng Gmail này làm tên đăng nhập.</div>
+                </div>
+
+                <!-- Số điện thoại -->
+                <div class="mb-3">
+                    <label class="form-label text-light">Số điện thoại *</label>
+                    <input type="tel" name="phone" class="form-control" placeholder="0901234567" 
+                           pattern="[0-9]{10}" title="Số điện thoại phải bao gồm đúng 10 chữ số" required>
+                </div>
+
+                <!-- Mật khẩu -->
+                <div class="mb-3">
+                    <label class="form-label text-light">Mật khẩu *</label>
+                    <input type="password" name="password" class="form-control" placeholder="••••••••" 
+                           pattern="^[A-Z].*[0-9].*$" title="Mật khẩu phải viết hoa chữ cái đầu tiên và có ít nhất 1 chữ số" required>
+                    <div class="form-text text-secondary">Yêu cầu: Viết hoa chữ đầu và có ít nhất 1 con số.</div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 rounded-pill mt-2">
+                    Đăng ký ngay
+                </button>
+            </form>
+
+            <div class="text-center mt-3">
+                <span class="text-secondary">Đã có tài khoản? </span>
+                <a href="/admin/login" class="text-info text-decoration-none">Đăng nhập</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

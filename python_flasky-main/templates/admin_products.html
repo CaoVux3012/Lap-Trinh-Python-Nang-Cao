@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Quản lý sản phẩm - Mobile Store AI{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <p class="section-kicker">Admin Products</p>
+
+        <div class="d-flex flex-column flex-md-row justify-content-between gap-3 align-items-md-center">
+            <div>
+                <h1>Quản lý sản phẩm</h1>
+                <p class="text-secondary mb-0">
+                    Thêm, chỉnh sửa và ẩn sản phẩm trên website.
+                </p>
+            </div>
+
+            <a href="/admin/products/create" class="btn btn-primary rounded-pill px-4">
+                Thêm sản phẩm
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="py-4">
+    <div class="container">
+        <div class="admin-panel">
+            {% if products %}
+            <div class="table-responsive">
+                <table class="table admin-table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Thương hiệu</th>
+                            <th>Giá</th>
+                            <th>Tồn kho</th>
+                            <th>Trạng thái</th>
+                            <th class="text-end">Thao tác</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for product in products %}
+                        <tr>
+                            <td>
+                                <div class="admin-product-cell">
+                                    <img src="{{ product.image_url }}" alt="{{ product.name }}">
+                                    <div>
+                                        <strong>{{ product.name }}</strong>
+                                        <span>{{ product.category.name }}</span>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>{{ product.brand }}</td>
+                            <td>{{ "{:,.0f}".format(product.price) }}đ</td>
+                            <td>{{ product.stock }}</td>
+
+                            <td>
+                                {% if product.is_active %}
+                                <span class="status-pill">Đang bán</span>
+                                {% else %}
+                                <span class="status-pill danger">Đã ẩn</span>
+                                {% endif %}
+                            </td>
+
+                            <td class="text-end">
+                                <a href="/admin/products/edit/{{ product.id }}"
+                                    class="btn btn-sm btn-outline-light rounded-pill">
+                                    Sửa
+                                </a>
+                                <a href="/admin/products/delete/{{ product.id }}"
+                                    class="btn btn-sm btn-outline-danger rounded-pill">
+                                    Ẩn
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-secondary mb-0">Chưa có sản phẩm nào.</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

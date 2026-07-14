@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}{{ form_title }} - Mobile Store AI{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <p class="section-kicker">Product Form</p>
+        <h1>{{ form_title }}</h1>
+        <p class="text-secondary mb-0">
+            Nhập thông tin sản phẩm hiển thị trên website.
+        </p>
+    </div>
+</section>
+
+<section class="py-4">
+    <div class="container">
+        <form method="post" class="checkout-form">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Tên sản phẩm *</label>
+                    <input
+                        type="text"
+                        name="name"
+                        class="form-control"
+                        value="{{ product.name if product else '' }}"
+                        required
+                    >
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Thương hiệu *</label>
+                    <input
+                        type="text"
+                        name="brand"
+                        class="form-control"
+                        value="{{ product.brand if product else '' }}"
+                        required
+                    >
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Danh mục *</label>
+                    <select name="category_id" class="form-select" required>
+                        {% for category in categories %}
+                        <option
+                            value="{{ category.id }}"
+                            {% if product and product.category_id == category.id %}selected{% endif %}
+                        >
+                            {{ category.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Giá bán *</label>
+                    <input
+                        type="number"
+                        name="price"
+                        class="form-control"
+                        value="{{ product.price if product else '' }}"
+                        required
+                    >
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Giá cũ</label>
+                    <input
+                        type="number"
+                        name="old_price"
+                        class="form-control"
+                        value="{{ product.old_price if product and product.old_price else '' }}"
+                    >
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Tồn kho</label>
+                    <input
+                        type="number"
+                        name="stock"
+                        class="form-control"
+                        value="{{ product.stock if product else 0 }}"
+                    >
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Link ảnh sản phẩm</label>
+                    <input
+                        type="text"
+                        name="image_url"
+                        class="form-control"
+                        value="{{ product.image_url if product else '' }}"
+                        placeholder="https://..."
+                    >
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Mô tả ngắn</label>
+                    <input
+                        type="text"
+                        name="short_description"
+                        class="form-control"
+                        value="{{ product.short_description if product else '' }}"
+                    >
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Mô tả chi tiết</label>
+                    <textarea name="description" class="form-control" rows="4">{{ product.description if product else '' }}</textarea>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Thông số nổi bật</label>
+                    <textarea name="specs" class="form-control" rows="3">{{ product.specs if product else '' }}</textarea>
+                </div>
+
+                {% if product %}
+                <div class="col-12">
+                    <label class="form-check text-secondary">
+                        <input
+                            type="checkbox"
+                            name="is_active"
+                            class="form-check-input"
+                            {% if product.is_active %}checked{% endif %}
+                        >
+                        Đang bán trên website
+                    </label>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary rounded-pill px-4">
+                    Lưu sản phẩm
+                </button>
+                <a href="/admin/products" class="btn btn-outline-light rounded-pill px-4 ms-2">
+                    Hủy
+                </a>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Login - Mobile Store{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="container">
+        <div class="auth-card">
+            <p class="section-kicker">Admin Access</p>
+            <h1>Đăng nhập quản trị</h1>
+            <p class="text-secondary">
+                Khu vực dành cho quản trị viên quản lý sản phẩm và đơn hàng.
+            </p>
+
+            <form method="post" action="/admin/login" class="mt-4">
+                <div class="mb-3">
+                    <label class="form-label">Tên đăng nhập</label>
+                    <input type="text" name="username" class="form-control" placeholder="admin" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Mật khẩu</label>
+                    <input type="password" name="password" class="form-control" placeholder="admin123" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 rounded-pill">
+                    Đăng nhập
+                </button>
+            </form>
+
+            <!-- Thêm liên kết chuyển hướng sang trang đăng ký -->
+            <div class="text-center mt-3">
+                <span class="text-secondary">Chưa có tài khoản? </span>
+                <a href="/register" class="text-info text-decoration-none">Đăng ký ngay</a>
+            </div>
+
+            <div class="demo-account">
+                Demo: <strong>admin</strong> / <strong>admin123</strong>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

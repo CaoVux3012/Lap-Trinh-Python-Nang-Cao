@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Thanh toán - Mobile Store AI{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <p class="section-kicker">Checkout</p>
+        <h1>Thông tin đặt hàng</h1>
+        <p class="text-secondary mb-0">
+            Nhập thông tin nhận hàng và xác nhận đơn hàng của bạn.
+        </p>
+    </div>
+</section>
+
+<section class="py-4">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-7">
+                <form method="post" action="/checkout" class="checkout-form">
+                    <h4>Thông tin khách hàng</h4>
+
+                    <div class="mb-3">
+                        <label class="form-label">Họ tên *</label>
+                        <input type="text" name="customer_name" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Số điện thoại *</label>
+                        <input type="text" name="customer_phone" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="customer_email" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Địa chỉ nhận hàng *</label>
+                        <input type="text" name="customer_address" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Ghi chú</label>
+                        <textarea name="note" class="form-control" rows="4" placeholder="Ví dụ: giao giờ hành chính, gọi trước khi giao..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary rounded-pill px-4">
+                        Xác nhận đặt hàng
+                    </button>
+
+                    <a href="/cart" class="btn btn-outline-light rounded-pill px-4 ms-2">
+                        Quay lại giỏ hàng
+                    </a>
+                </form>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="order-summary">
+                    <h4>Đơn hàng của bạn</h4>
+
+                    {% for item in cart_items %}
+                    <div class="checkout-item">
+                        <div>
+                            <strong>{{ item.product.name }}</strong>
+                            <span>Số lượng: {{ item.quantity }}</span>
+                        </div>
+                        <div>
+                            {{ "{:,.0f}".format(item.item_total) }}đ
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <div class="summary-line">
+                        <span>Phương thức</span>
+                        <strong>COD</strong>
+                    </div>
+
+                    <div class="summary-line">
+                        <span>Phí vận chuyển</span>
+                        <strong>Miễn phí</strong>
+                    </div>
+
+                    <div class="summary-total">
+                        <span>Tổng thanh toán</span>
+                        <strong>{{ "{:,.0f}".format(total_amount) }}đ</strong>
+                    </div>
+
+                    <p class="summary-note">
+                        Nhân viên sẽ liên hệ xác nhận đơn hàng trước khi giao.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

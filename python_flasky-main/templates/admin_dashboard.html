@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Mobile Store AI{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <p class="section-kicker">Admin Panel</p>
+        <h1>Dashboard quản trị</h1>
+        <p class="text-secondary mb-0">
+            Theo dõi sản phẩm, đơn hàng, doanh thu và các cảnh báo tồn kho.
+        </p>
+    </div>
+</section>
+
+<section class="py-4">
+    <div class="container">
+        <div class="admin-stats-grid">
+            <div class="admin-stat-card">
+                <span>Sản phẩm</span>
+                <strong>{{ total_products }}</strong>
+            </div>
+
+            <div class="admin-stat-card">
+                <span>Đơn hàng</span>
+                <strong>{{ total_orders }}</strong>
+            </div>
+
+            <div class="admin-stat-card">
+                <span>Đang xử lý</span>
+                <strong>{{ pending_orders }}</strong>
+            </div>
+
+            <div class="admin-stat-card">
+                <span>Doanh thu</span>
+                <strong>{{ "{:,.0f}".format(revenue) }}đ</strong>
+            </div>
+        </div>
+
+        <div class="row g-4 mt-2">
+            <div class="col-lg-8">
+                <div class="admin-panel">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4>Đơn hàng gần đây</h4>
+                        <a href="#" class="btn btn-sm btn-outline-light rounded-pill disabled">
+                            Quản lý đơn hàng
+                        </a>
+                    </div>
+
+                    {% if latest_orders %}
+                    <div class="table-responsive">
+                        <table class="table admin-table align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Mã</th>
+                                    <th>Khách hàng</th>
+                                    <th>SĐT</th>
+                                    <th>Tổng tiền</th>
+                                    <th>Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in latest_orders %}
+                                <tr>
+                                    <td>#{{ order.id }}</td>
+                                    <td>{{ order.customer_name }}</td>
+                                    <td>{{ order.customer_phone }}</td>
+                                    <td>{{ "{:,.0f}".format(order.total_amount) }}đ</td>
+                                    <td>
+                                        <span class="status-pill">{{ order.status }}</span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-secondary mb-0">Chưa có đơn hàng nào.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="admin-panel">
+                    <h4>Cảnh báo tồn kho</h4>
+
+                    {% if low_stock_products %}
+                    <div class="low-stock-list">
+                        {% for product in low_stock_products %}
+                        <div class="low-stock-item">
+                            <div>
+                                <strong>{{ product.name }}</strong>
+                                <span>{{ product.brand }}</span>
+                            </div>
+                            <div class="stock-number">{{ product.stock }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-secondary mb-0">Tồn kho đang ổn định.</p>
+                    {% endif %}
+                </div>
+
+                <div class="admin-panel mt-4">
+                    <h4>Thao tác nhanh</h4>
+                    <div class="d-grid gap-2 mt-3">
+                        <a href="/admin/products" class="btn btn-outline-light rounded-pill">
+                            Quản lý sản phẩm
+                        </a>
+                        <a href="/admin/orders" class="btn btn-sm btn-outline-light rounded-pill">
+                            Quản lý đơn hàng
+                        </a>
+                        <a href="/products" class="btn btn-primary rounded-pill">
+                            Xem website
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

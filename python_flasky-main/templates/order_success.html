@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Đặt hàng thành công - Mobile Store AI{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="success-panel">
+            <div class="success-icon">✓</div>
+            <p class="section-kicker">Order Created</p>
+            <h1>Đặt hàng thành công</h1>
+            <p class="text-secondary">
+                Cảm ơn bạn đã mua hàng tại Mobile Store AI. Đơn hàng của bạn đã được ghi nhận.
+            </p>
+
+            <div class="success-info">
+                <div>
+                    <span>Mã đơn hàng</span>
+                    <strong>#{{ order.id }}</strong>
+                </div>
+                <div>
+                    <span>Khách hàng</span>
+                    <strong>{{ order.customer_name }}</strong>
+                </div>
+                <div>
+                    <span>Số điện thoại</span>
+                    <strong>{{ order.customer_phone }}</strong>
+                </div>
+                <div>
+                    <span>Tổng tiền</span>
+                    <strong>{{ "{:,.0f}".format(order.total_amount) }}đ</strong>
+                </div>
+                <div>
+                    <span>Trạng thái</span>
+                    <strong>{{ order.status }}</strong>
+                </div>
+                <div>
+                    <span>Thanh toán</span>
+                    <strong>{{ order.payment_method }}</strong>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <a href="/products" class="btn btn-primary rounded-pill px-4">
+                    Tiếp tục mua sắm
+                </a>
+                <a href="/" class="btn btn-outline-light rounded-pill px-4 ms-2">
+                    Về trang chủ
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

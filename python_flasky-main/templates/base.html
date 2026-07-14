@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}Mobile Store{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark app-navbar sticky-top" style="background-color: #111827 !important; border-bottom: 1px solid #1f2937;">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                Mobile Store
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <div class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+                    <a class="nav-link" href="/">Trang chủ</a>
+                    <a class="nav-link" href="/products">Sản phẩm</a>
+                    <a class="nav-link" href="/cart">Giỏ hàng</a>
+                    {% if current_user.is_authenticated %}
+                    <a class="nav-link" href="/admin">Dashboard</a>
+                    <a class="btn btn-sm btn-outline-light rounded-pill px-3" href="/admin/logout">Đăng xuất</a>
+                    {% else %}
+                    <a class="btn btn-sm btn-outline-light rounded-pill px-3" href="/admin/login">Admin</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-3">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show app-alert" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="app-footer py-4 mt-5">
+        <div class="container d-flex flex-column flex-md-row justify-content-between gap-2">
+            <div>
+                <strong>Mobile Store AI</strong>
+                <span class="text-secondary"> - Flask website tích hợp chatbot AI</span>
+            </div>
+            <div class="text-secondary">
+                Đồ án Python Flask
+            </div>
+        </div>
+    </footer>
+
+    <div class="floating-contact">
+        <a href="tel:0900000000" class="contact-dot hotline">Hotline</a>
+        <button class="contact-dot ai-chat" type="button" onclick="toggleChatBox()">AI</button>
+    </div>
+
+    <div class="chatbox-widget" id="chatBoxWidget">
+        <div class="chatbox-header">
+            <div>
+                <strong>AI tư vấn</strong>
+                <span>Online</span>
+            </div>
+            <button type="button" onclick="toggleChatBox()">×</button>
+        </div>
+
+        <div class="chatbox-body" id="chatMessages">
+            <div class="chat-msg bot">
+                Xin chào! Bạn cần tìm điện thoại theo ngân sách hay nhu cầu nào?
+            </div>
+            <div class="chat-suggestion" onclick="quickAsk('Máy chơi game dưới 15 triệu')">
+                Máy chơi game dưới 15 triệu
+            </div>
+            <div class="chat-suggestion" onclick="quickAsk('Điện thoại chụp ảnh đẹp')">
+                Điện thoại chụp ảnh đẹp
+            </div>
+            <div class="chat-suggestion" onclick="quickAsk('So sánh iPhone và Samsung')">
+                So sánh iPhone và Samsung
+            </div>
+        </div>
+
+        <div class="chatbox-input">
+            <input type="text" id="chatInput" placeholder="Nhập câu hỏi...">
+            <button type="button" onclick="sendChatMessage()">Gửi</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleChatBox() {
+            const box = document.getElementById("chatBoxWidget");
+            box.classList.toggle("show");
+        }
+
+        window.addEventListener("load", function () {
+            // Kiểm tra xem trong phiên truy cập này (session) chatbox đã từng tự động bật chưa
+            if (!sessionStorage.getItem("chatbox_auto_shown")) {
+                setTimeout(function () {
+                    const box = document.getElementById("chatBoxWidget");
+                    if (box) {
+                        box.classList.add("show");
+                        // Đánh dấu là đã tự động bật lên một lần thành công
+                        sessionStorage.setItem("chatbox_auto_shown", "true");
+                    }
+                }, 900);
+            }
+        });
+
+        function appendMessage(type, text) {
+            const messages = document.getElementById("chatMessages");
+            const div = document.createElement("div");
+            div.className = "chat-msg " + type;
+            div.textContent = text;
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function quickAsk(text) {
+            document.getElementById("chatInput").value = text;
+            sendChatMessage();
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById("chatInput");
+            const message = input.value.trim();
+
+            if (!message) {
+                return;
+            }
+
+            appendMessage("user", message);
+            input.value = "";
+
+            const loadingId = "loading-" + Date.now();
+            const messages = document.getElementById("chatMessages");
+            const loading = document.createElement("div");
+            loading.className = "chat-msg bot";
+            loading.id = loadingId;
+            loading.textContent = "Đang tư vấn...";
+            messages.appendChild(loading);
+            messages.scrollTop = messages.scrollHeight;
+
+            try {
+                const response = await fetch("/api/chatbot", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+
+                const data = await response.json();
+
+                document.getElementById(loadingId).remove();
+
+                if (data.success) {
+                    appendMessage("bot", data.answer);
+                } else {
+                    appendMessage("bot", data.answer || "Xin lỗi, mình chưa xử lý được câu hỏi này.");
+                }
+            } catch (error) {
+                document.getElementById(loadingId).remove();
+                appendMessage("bot", "Hiện tại chatbot đang gặp lỗi kết nối. Bạn thử lại sau nhé.");
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const input = document.getElementById("chatInput");
+
+            if (input) {
+                input.addEventListener("keydown", function (event) {
+                    if (event.key === "Enter") {
+                        sendChatMessage();
+                    }
+                });
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

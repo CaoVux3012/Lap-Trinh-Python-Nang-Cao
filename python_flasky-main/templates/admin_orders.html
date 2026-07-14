@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Quản lý đơn hàng - Mobile Store AI{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <p class="section-kicker">Admin Orders</p>
+        <h1>Quản lý đơn hàng</h1>
+        <p class="text-secondary mb-0">
+            Theo dõi và xử lý các đơn hàng khách đã đặt.
+        </p>
+    </div>
+</section>
+
+<section class="py-4">
+    <div class="container">
+        <div class="filter-bar mb-4">
+            <div class="d-flex flex-wrap gap-2">
+                <a href="/admin/orders" class="btn btn-sm {% if not selected_status %}btn-primary{% else %}btn-outline-light{% endif %} rounded-pill">
+                    Tất cả
+                </a>
+                <a href="/admin/orders?status=PENDING" class="btn btn-sm {% if selected_status == 'PENDING' %}btn-primary{% else %}btn-outline-light{% endif %} rounded-pill">
+                    Chờ xử lý
+                </a>
+                <a href="/admin/orders?status=CONFIRMED" class="btn btn-sm {% if selected_status == 'CONFIRMED' %}btn-primary{% else %}btn-outline-light{% endif %} rounded-pill">
+                    Đã xác nhận
+                </a>
+                <a href="/admin/orders?status=SHIPPING" class="btn btn-sm {% if selected_status == 'SHIPPING' %}btn-primary{% else %}btn-outline-light{% endif %} rounded-pill">
+                    Đang giao
+                </a>
+                <a href="/admin/orders?status=COMPLETED" class="btn btn-sm {% if selected_status == 'COMPLETED' %}btn-primary{% else %}btn-outline-light{% endif %} rounded-pill">
+                    Hoàn thành
+                </a>
+                <a href="/admin/orders?status=CANCELLED" class="btn btn-sm {% if selected_status == 'CANCELLED' %}btn-primary{% else %}btn-outline-light{% endif %} rounded-pill">
+                    Đã hủy
+                </a>
+            </div>
+        </div>
+
+        <div class="admin-panel">
+            {% if orders %}
+            <div class="table-responsive">
+                <table class="table admin-table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Mã đơn</th>
+                            <th>Khách hàng</th>
+                            <th>SĐT</th>
+                            <th>Tổng tiền</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày tạo</th>
+                            <th class="text-end">Thao tác</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td>#{{ order.id }}</td>
+                            <td>{{ order.customer_name }}</td>
+                            <td>{{ order.customer_phone }}</td>
+                            <td>{{ "{:,.0f}".format(order.total_amount) }}đ</td>
+                            <td>
+                                <span class="status-pill status-{{ order.status|lower }}">
+                                    {{ order.status }}
+                                </span>
+                            </td>
+                            <td>{{ order.created_at.strftime("%d/%m/%Y %H:%M") }}</td>
+                            <td class="text-end">
+                                <a href="/admin/orders/{{ order.id }}" class="btn btn-sm btn-outline-light rounded-pill">
+                                    Chi tiết
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-secondary mb-0">Không có đơn hàng phù hợp.</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
