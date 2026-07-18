@@ -34,3 +34,16 @@ pip install -r requirements.txt
 python init_db.py
 python seed.py
 python app.py
+
+
+## Build
+## Run code trên Docker
+```bash
+docker build -t flask-project .
+```
+
+## Run
+
+```bash
+docker run --env-file .env -p 5000:5000 flask-project
+```
