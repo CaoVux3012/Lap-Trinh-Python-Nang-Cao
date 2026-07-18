@@ -37,6 +37,7 @@ python app.py
 
 
 ## Build
+
 ## Run code trên Docker
 ```bash
 docker build -t flask-project .
@@ -45,5 +46,5 @@ docker build -t flask-project .
 ## Run
 
 ```bash
-docker run --env-file .env -p 5000:5000 flask-project
+docker run --env-file ..\.env -p 5000:5000 flask-project
 ```
